@@ -4,12 +4,14 @@ import List from "./List";
 import Input from "./Input";
 import Title from "./Title";
 
+var key = 0;
+
 export default class App extends Component {
   state = {
     todos: [
-      { text: "eat", completed: false },
-      { text: "drink", completed: false },
-      { text: "be merry", completed: false }
+      { text: "eat", id: key++, completed: false },
+      { text: "drink", id: key++, completed: false },
+      { text: "be merry", id: key++, completed: false }
     ]
   };
 
@@ -17,7 +19,7 @@ export default class App extends Component {
     const { todos } = this.state;
 
     this.setState({
-      todos: [{ text, completed: false }, ...todos]
+      todos: [{ text, id: key++, completed: false }, ...todos]
     });
   };
 
@@ -28,7 +30,7 @@ export default class App extends Component {
 
     this.setState({
       todos: todos.map((todo, i) => {
-        if (i === index) {
+        if (todo.id === index) {
           return { ...todo, completed: !todo.completed };
         } else {
           return todo;
@@ -49,6 +51,9 @@ export default class App extends Component {
   render() {
     const { todos } = this.state;
 
+    const activeTodos = todos.filter(todo => !todo.completed);
+    const completedTodos = todos.filter(todo => todo.completed);
+
     return (
       <div style={styles.container}>
         <Title>To-Do List</Title>
@@ -56,7 +61,9 @@ export default class App extends Component {
           placeholder={"Type a todo, then hit enter!"}
           onSubmitEditing={this.onAddTodo}
         />
-        <List list={todos} onToggleTodo={this.onToggleTodo} />
+        <List list={activeTodos} onToggleTodo={this.onToggleTodo} />
+        <Title>Completed List</Title>
+        <List list={completedTodos} onToggleTodo={this.onToggleTodo} />
       </div>
     );
   }
