@@ -7,10 +7,7 @@ export default class List extends Component {
 
     return (
       <div style={styles.item}>
-        <Checkbox
-          checked={item.completed}
-          onChange={() => onToggleTodo(item.id)}
-        />
+        <Checkbox checked={item.completed} onChange={() => onToggleTodo(i)} />
         {item.text}
       </div>
     );
