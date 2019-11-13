@@ -17,7 +17,7 @@ export default class App extends Component {
     const { todos } = this.state;
 
     this.setState({
-      todos: [text, ...todos]
+      todos: [{ text, completed: false }, ...todos]
     });
   };
 
