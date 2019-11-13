@@ -19,10 +19,11 @@ export default class App extends Component {
 
   onRemoveTodo = index => {
     const { todos } = this.state;
-
+    /*
     this.setState({
       todos: todos.filter((todo, i) => i !== index)
     });
+    */
   };
 
   render() {
