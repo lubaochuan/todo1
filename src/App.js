@@ -6,7 +6,11 @@ import Title from "./Title";
 
 export default class App extends Component {
   state = {
-    todos: ["Click to remove", "Learn React", "Write Code", "Ship App"]
+    todos: [
+      { text: "eat", completed: false },
+      { text: "drink", completed: false },
+      { text: "be merry", completed: false }
+    ]
   };
 
   onAddTodo = text => {
@@ -14,6 +18,22 @@ export default class App extends Component {
 
     this.setState({
       todos: [text, ...todos]
+    });
+  };
+
+  onToggleTodo = index => {
+    const { todos } = this.state;
+
+    console.log("toggle " + index);
+
+    this.setState({
+      todos: todos.map((todo, i) => {
+        if (i === index) {
+          return { ...todo, completed: !todo.completed };
+        } else {
+          return todo;
+        }
+      })
     });
   };
 
@@ -36,7 +56,7 @@ export default class App extends Component {
           placeholder={"Type a todo, then hit enter!"}
           onSubmitEditing={this.onAddTodo}
         />
-        <List list={todos} onClickItem={this.onRemoveTodo} />
+        <List list={todos} onToggleTodo={this.onToggleTodo} />
       </div>
     );
   }
