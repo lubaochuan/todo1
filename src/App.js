@@ -4,14 +4,13 @@ import List from "./List";
 import Input from "./Input";
 import Title from "./Title";
 
-var key = 0;
-
 export default class App extends Component {
+  key = 0;
   state = {
     todos: [
-      { text: "eat", id: key++, completed: false },
-      { text: "drink", id: key++, completed: false },
-      { text: "be merry", id: key++, completed: false }
+      { text: "eat", id: this.key++, completed: false },
+      { text: "drink", id: this.key++, completed: false },
+      { text: "be merry", id: this.key++, completed: false }
     ]
   };
 
@@ -19,7 +18,7 @@ export default class App extends Component {
     const { todos } = this.state;
 
     this.setState({
-      todos: [{ text, id: key++, completed: false }, ...todos]
+      todos: [{ text, id: this.key++, completed: false }, ...todos]
     });
   };
 
