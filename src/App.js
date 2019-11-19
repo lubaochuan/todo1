@@ -3,63 +3,40 @@ import React, { Component } from "react";
 import List from "./List";
 import Input from "./Input";
 import Title from "./Title";
-import { VisibilityFilters } from "./constants";
 import Footer from "./Footer";
+import { VisibilityFilters } from "./constants";
 
-export default class App extends Component {
-  key = 0;
-  state = {
-    todos: [
-      { text: "eat", id: this.key++, completed: false },
-      { text: "drink", id: this.key++, completed: false },
-      { text: "be merry", id: this.key++, completed: false }
-    ],
-    visibilityFilter: VisibilityFilters.SHOW_ALL
-  };
+import { connect } from "react-redux";
+import { actionCreators } from "./TodoListRedux";
 
+const mapStateToProps = state => ({
+  todos: state.todos,
+  visibilityFilter: state.visibilityFilter
+});
+
+class App extends Component {
   onAddTodo = text => {
-    const { todos } = this.state;
-
-    this.setState({
-      ...this.state,
-      todos: [{ text, id: this.key++, completed: false }, ...todos]
-    });
+    const { dispatch } = this.props;
+    dispatch(actionCreators.add(text));
   };
 
   onToggleTodo = index => {
-    const { todos } = this.state;
-
-    console.log("toggle " + index);
-
-    this.setState({
-      todos: todos.map((todo, i) => {
-        if (todo.id === index) {
-          return { ...todo, completed: !todo.completed };
-        } else {
-          return todo;
-        }
-      })
-    });
+    const { dispatch } = this.props;
+    dispatch(actionCreators.toggle(index));
   };
 
   onUpdateVisibilityFilter = visibility => {
-    console.log("new visibility: " + visibility);
-    this.setState({
-      ...this.state,
-      visibilityFilter: visibility
-    });
+    const { dispatch } = this.props;
+    dispatch(actionCreators.setVisibilityFilter(visibility));
   };
 
   onDeleteTodo = index => {
-    const { todos } = this.state;
-    this.setState({
-      ...this.state,
-      todos: todos.filter(todo => todo.id !== index)
-    });
+    const { dispatch } = this.props;
+    dispatch(actionCreators.remove(index));
   };
 
   render() {
-    const { todos, visibilityFilter } = this.state;
+    const { todos, visibilityFilter } = this.props;
 
     let visibleTodos = todos;
     if (visibilityFilter === VisibilityFilters.SHOW_ACTIVE) {
@@ -81,7 +58,7 @@ export default class App extends Component {
           onDeleteTodo={this.onDeleteTodo}
         />
         <Footer
-          currentFilter={this.state.visibilityFilter}
+          currentFilter={this.props.visibilityFilter}
           onUpdateVisibilityFilter={this.onUpdateVisibilityFilter}
         />
       </div>
@@ -95,3 +72,5 @@ const styles = {
     flexDirection: "column"
   }
 };
+
+export default connect(mapStateToProps)(App);
