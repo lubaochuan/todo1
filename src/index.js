@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
+import thunk from "redux-thunk";
 import App from "./App";
 
 // Import the reducer and create a store
@@ -14,7 +15,7 @@ const logger = store => next => action => {
   return result;
 };
 
-const store = createStore(reducer, applyMiddleware(logger));
+const store = createStore(reducer, applyMiddleware(logger, thunk));
 
 const AppWithStore = (
   <Provider store={store}>
