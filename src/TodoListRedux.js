@@ -13,8 +13,8 @@ export const types = {
 
 // Helper functions to dispatch actions, optionally with payloads
 export const actionCreators = {
-  add: text => {
-    return { type: types.ADD, payload: { text, completed: false } };
+  add: todo => {
+    return { type: types.ADD, payload: todo };
   },
   remove: index => {
     return { type: types.REMOVE, payload: index };

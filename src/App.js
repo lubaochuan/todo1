@@ -42,7 +42,20 @@ class App extends Component {
 
   onAddTodo = text => {
     const { dispatch } = this.props;
-    dispatch(actionCreators.add(text));
+    fetch(API_URL, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      method: "POST",
+      body: JSON.stringify({ text, completed: false })
+    })
+      .then(res => res.json())
+      .then(result => {
+        console.log("result from add: ", result);
+        dispatch(actionCreators.add(result));
+      })
+      .catch(err => console.error("Request failed", err));
   };
 
   onToggleTodo = index => {
