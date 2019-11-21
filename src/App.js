@@ -58,9 +58,22 @@ class App extends Component {
       .catch(err => console.error("Request failed", err));
   };
 
-  onToggleTodo = index => {
+  onToggleTodo = todo => {
+    todo.completed = !todo.completed;
     const { dispatch } = this.props;
-    dispatch(actionCreators.toggle(index));
+    fetch(API_URL + "/" + todo.id, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      method: "PUT",
+      body: JSON.stringify(todo)
+    })
+      .then(res => res.json())
+      .then(result => {
+        dispatch(actionCreators.update(result));
+      })
+      .catch(err => console.error("Request failed", err));
   };
 
   onUpdateVisibilityFilter = visibility => {

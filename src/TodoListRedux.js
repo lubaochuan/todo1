@@ -4,7 +4,7 @@ import { VisibilityFilters } from "./constants";
 export const types = {
   ADD: "ADD",
   REMOVE: "REMOVE",
-  TOGGLE: "TOGGLE",
+  UPDATE: "UPDATE",
   SET_VISIBILITY_FILTER: "SET_VISIBILITY_FILTER",
   FETCH_TODOS_PENDING: "FETCH_TODOS_PENDING",
   FETCH_TODOS_SUCCESS: "FETCH_TODOS_SUCCESS",
@@ -19,8 +19,8 @@ export const actionCreators = {
   remove: index => {
     return { type: types.REMOVE, payload: index };
   },
-  toggle: index => {
-    return { type: types.TOGGLE, payload: index };
+  update: todo => {
+    return { type: types.UPDATE, payload: todo };
   },
   setVisibilityFilter: visibility => {
     return { type: types.SET_VISIBILITY_FILTER, payload: visibility };
@@ -83,15 +83,10 @@ export const reducer = (state = initialState, action) => {
         ...state,
         todos: todos.filter(todo => todo.id !== payload)
       };
-    case types.TOGGLE:
+    case types.UPDATE:
       return {
         ...state,
-        todos: todos.map(todo => {
-          return {
-            ...todo,
-            completed: todo.id === payload ? !todo.completed : todo.completed
-          };
-        })
+        todos: todos.map(todo => (todo.id === payload.id ? payload : todo))
       };
     case types.SET_VISIBILITY_FILTER:
       return {
