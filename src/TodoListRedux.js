@@ -1,10 +1,8 @@
 import { VisibilityFilters } from "./constants";
+import { todosRef } from "./firebase";
 
 // The types of actions that you can dispatch to modify the state of the store
 export const types = {
-  ADD: "ADD",
-  REMOVE: "REMOVE",
-  UPDATE: "UPDATE",
   SET_VISIBILITY_FILTER: "SET_VISIBILITY_FILTER",
   FETCH_TODOS_PENDING: "FETCH_TODOS_PENDING",
   FETCH_TODOS_SUCCESS: "FETCH_TODOS_SUCCESS",
@@ -13,14 +11,17 @@ export const types = {
 
 // Helper functions to dispatch actions, optionally with payloads
 export const actionCreators = {
-  add: todo => {
-    return { type: types.ADD, payload: todo };
+  add: todo => async dispatch => {
+    todosRef.push().set(todo);
   },
-  remove: index => {
-    return { type: types.REMOVE, payload: index };
+  remove: id => async dispatch => {
+    todosRef.child(id).remove();
   },
-  update: todo => {
-    return { type: types.UPDATE, payload: todo };
+  update: todo => async dispatch => {
+    todosRef.child(todo.id).set({
+      completed: todo.completed,
+      text: todo.text
+    });
   },
   setVisibilityFilter: visibility => {
     return { type: types.SET_VISIBILITY_FILTER, payload: visibility };
@@ -52,7 +53,6 @@ const initialState = {
 //   call reducer() with no state on startup, and we are expected to
 //   return the initial state of the app in this case.
 export const reducer = (state = initialState, action) => {
-  const { todos } = state;
   const { type, payload } = action;
 
   switch (type) {
@@ -72,21 +72,6 @@ export const reducer = (state = initialState, action) => {
         ...state,
         pending: false,
         error: action.error
-      };
-    case types.ADD:
-      return {
-        ...state,
-        todos: [payload, ...todos]
-      };
-    case types.REMOVE:
-      return {
-        ...state,
-        todos: todos.filter(todo => todo.id !== payload)
-      };
-    case types.UPDATE:
-      return {
-        ...state,
-        todos: todos.map(todo => (todo.id === payload.id ? payload : todo))
       };
     case types.SET_VISIBILITY_FILTER:
       return {
